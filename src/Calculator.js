@@ -59,11 +59,14 @@ export default () => {
     const [result, setResult] = useState(null); // 결과창
     const [tempInput, setTempInput] = useState(null); // 연산에 사용될 값
     const [tempOperator, setTempOperator] = useState(null); // 연산에 사용될 연산자
+    const [isClickedOperator, setIsClickedOperator] = useState(false);
+    const [isClickedEqual, setIsClieckedEqual] = useState(false);
 
     const onPressNum = (num) => {
-        if (currentOperator) {
+        if (currentOperator && isClickedOperator) {
             setResult(input)
             setInput(num)   
+            setIsClickedOperator(false);
         } else {
         // const newInput = input + num // bad case
         const newInput = Number(`${input}${num}`) // 문자열로 붙인 다음에 Number로 초기화
@@ -74,26 +77,32 @@ export default () => {
     const onPressOperator = (operator) => {
         if (operator !== "=") {
             setCurrentOperator(operator);
+            setIsClickedOperator(true);
+            setIsClieckedEqual(false);
         } else {
             let finalResult = result;
+            const finalInput = isClickedEqual ? tempInput : input;
             // TODO: == 
             switch (currentOperator) {
                 case "+":
-                    finalResult = result + input;
+                    finalResult = result + finalInput;
                     break;
                 case "-":
-                    finalResult = result - input;
+                    finalResult = result - finalInput;
                     break;
                 case "*":
-                    finalResult = result * input;
+                    finalResult = result * finalInput;
                     break;
                 case "/":
-                    finalResult = result / input;
+                    finalResult = result / finalInput;
                     break;
                 default: break;
             }
             setResult(finalResult);
-            setInput(finalResult)
+            setInput(finalResult);
+            setTempInput(finalInput);
+            setIsClieckedEqual(true);
+            setCurrentOperator(0);
         }
     }
 
