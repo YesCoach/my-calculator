@@ -70,16 +70,19 @@ export default () => {
 
         /**
          * State 값 체크하기 위한 테스트 Text
-         * 
+         * {__DEV__ && ()} => 개발모드에서만 렌더링 
          */
 
         <View style = {{ flex: 1, width: "60%", justifyContent: "center" }}>
-
-            <Text>input: {input}</Text>
-            <Text>currentOperator: {currentOperator}</Text>
-            <Text>result: {result}</Text>
-            <Text>tempInput: {tempInput}</Text>
-            <Text>tempOperator: {tempOperator}</Text>
+            {__DEV__ && (
+                <>
+                <Text>input: {input}</Text>
+                <Text>currentOperator: {currentOperator}</Text>
+                <Text>result: {result}</Text>
+                <Text>tempInput: {tempInput}</Text>
+                <Text>tempOperator: {tempOperator}</Text>
+            </>
+            )}
 
             {/* 결과 */}
             <InputContainer>
