@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styled } from 'styled-components';
-import { useState } from 'react';
+import { useCalculator } from './useCalculator';
 
 const COLOR = {
     RESULT: '#4e4c51',
@@ -53,58 +53,18 @@ const InputContainer = styled.View`
 `;
 
 export default () => {
-
-    const [input, setInput] = useState(0); // 입력창
-    const [currentOperator, setCurrentOperator] = useState(null); // 연산자 볼드처리
-    const [result, setResult] = useState(null); // 결과창
-    const [tempInput, setTempInput] = useState(null); // 연산에 사용될 값
-    const [tempOperator, setTempOperator] = useState(null); // 연산에 사용될 연산자
-    const [isClickedOperator, setIsClickedOperator] = useState(false);
-    const [isClickedEqual, setIsClieckedEqual] = useState(false);
-
-    const onPressNum = (num) => {
-        if (currentOperator && isClickedOperator) {
-            setResult(input)
-            setInput(num)   
-            setIsClickedOperator(false);
-        } else {
-        // const newInput = input + num // bad case
-        const newInput = Number(`${input}${num}`) // 문자열로 붙인 다음에 Number로 초기화
-        setInput(newInput);   
-        }
-    }
-
-    const onPressOperator = (operator) => {
-        if (operator !== "=") {
-            setCurrentOperator(operator);
-            setIsClickedOperator(true);
-            setIsClieckedEqual(false);
-        } else {
-            let finalResult = result;
-            const finalInput = isClickedEqual ? tempInput : input;
-            // TODO: == 
-            switch (currentOperator) {
-                case "+":
-                    finalResult = result + finalInput;
-                    break;
-                case "-":
-                    finalResult = result - finalInput;
-                    break;
-                case "*":
-                    finalResult = result * finalInput;
-                    break;
-                case "/":
-                    finalResult = result / finalInput;
-                    break;
-                default: break;
-            }
-            setResult(finalResult);
-            setInput(finalResult);
-            setTempInput(finalInput);
-            setIsClieckedEqual(true);
-            setCurrentOperator(0);
-        }
-    }
+    // 구조분해
+    const {
+        input,
+        currentOperator,
+        result,
+        tempInput,
+        tempOperator,
+        hasInput,
+        onPressNum,
+        onPressOperator,
+        onPressReset
+    } = useCalculator();
 
     return (
 
@@ -130,14 +90,8 @@ export default () => {
             <ButtonContainer>
                 <Button
                     type="reset"
-                    text="AC"
-                    onPress={() => {
-                        setInput(0);
-                        setCurrentOperator(null);
-                        setResult(null);
-                        setTempInput(null);
-                        setTempOperator(null);
-                    }}
+                    text={hasInput ? "C" : "AC"}
+                    onPress={() => onPressReset()}
                     flex={3}
                 />
                 <Button
